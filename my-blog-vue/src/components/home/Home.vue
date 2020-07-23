@@ -20,7 +20,6 @@
                     :page-size="pageSize"
                     :total="total"
                     @current-change=pageQuery>
-                    
                   </el-pagination>
                 </div>
               </div>
@@ -65,6 +64,24 @@ export default {
           _this.currentPage = res.data.data.currentPage
         })
     },
+    myBlogQuery(currentPage){
+      const _this = this
+      if(this.$store.getters.getUser){
+        this.userId = this.$store.getters.getUser.userId
+      }
+      this.$axios
+        .post('/myblogs',{
+          currentPage: currentPage,
+          size: this.pageSize,
+          author: this.userId
+        })
+        .then((res)=>{
+          _this.blogs = res.data.data.blog
+          _this.currentPage = res.data.data.currentPage
+          _this.pageSize = res.data.data.size
+          _this.total = res.data.data.totalSize
+        })
+    },
     typeQuery(){
       const _this = this
       this.$axios
@@ -72,6 +89,37 @@ export default {
         .then((res) => {
           _this.typeList = res.data.data
         })
+    },
+    logout() {
+      const _this = this 
+      this.$axios.get('/logout',{
+        header: {
+          "Authorization": localStorage.getItem("token")
+        }
+      }).then((res) => {
+        _this.loginFlag = false
+        _this.$store.commit('REMOVE_INFO')
+        _this.$router.push('/login')
+      })
+    },
+    login(){
+      this.$router.push('/login')
+    },
+    showPersonalCenter(){
+      this.$router.push('/personal')
+    },
+    contentShow(key,keyPath){
+      if(key === 'personalNotes'){
+        this.myBlogQuery(1)
+      }else if(key === 'homePage'){
+        this.pageQuery(1)
+      }else if(key === 'logout'){
+        this.logout()
+      }else if(key === 'login'){
+        this.login()
+      }else if(key === 'personalCenter'){
+        this.showPersonalCenter()
+      }
     }
   },
   mounted () {

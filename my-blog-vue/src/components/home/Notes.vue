@@ -46,6 +46,7 @@ export default {
   data() {
     return {
       blogs: {},
+      typeList: {},
       currentPage: 1,
       total: 0,
       pageSize: 5,

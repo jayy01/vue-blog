@@ -85,7 +85,7 @@ public class BlogController {
         }
     }
     /*分页带条件查询个人*/
-    //@RequiresAuthentication
+    @RequiresAuthentication
     @PostMapping(path = "/myblogs")
     public ResponseResult<PageBlog> getBlogByPageAndAuthor(@RequestBody QueryBlog queryBlog){
         PageBlog blogByPage = blogSrevice.getBlogByPageAndAuthor(queryBlog.getCurrentPage(), queryBlog.getSize(),queryBlog);
